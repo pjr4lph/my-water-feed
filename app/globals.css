@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Disable pull-to-refresh on mobile so it doesn't break scrolling */
+body {
+  overscroll-behavior-y: contain;
+  background-color: black;
+  color: white;
+}
+
+/* Create the vertical snap container */
+.snap-container {
+  height: 100dvh;
+  /* Dynamic viewport height */
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  /* Hide scrollbar Firefox */
+}
+
+.snap-container::-webkit-scrollbar {
+  display: none;
+  /* Hide scrollbar Chrome/Safari */
+}
