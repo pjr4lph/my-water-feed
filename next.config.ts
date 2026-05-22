@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
+const CLOUDFRONT_URL = process.env.NEXT_PUBLIC_CLOUDFRONT_URL;
 
 const nextConfig: NextConfig = {
     images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'xxxxxx.cloudfront.net', // will replace URL
+        hostname: 'CLOUDFRONT_URL',
         port: '',
         pathname: '/**',
       },

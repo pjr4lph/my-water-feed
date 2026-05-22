@@ -1,5 +1,3 @@
-export const CLOUDFRONT_URL = "https://xxxxxx.cloudfront.net";
-
 export const VIDEO_FEED = [
   { id: 1, slug: "video-1", video: "01.mp4", thumb: "01.png", title: "Video One" },
   { id: 2, slug: "video-2", video: "02.mp4", thumb: "02.png", title: "Video Two" },
