@@ -23,3 +23,14 @@ body {
   display: none;
   /* Hide scrollbar Chrome/Safari */
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  /* Prevents "bounce" on iOS which can mess up the teleportation logic */
+  overscroll-behavior-y: none;
+}

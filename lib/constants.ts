@@ -1,4 +1,4 @@
-export const VIDEO_FEED = [
+export const VIDEO_DATA = [
   { id: 1, slug: "video-1", video: "01.mp4", thumb: "01.png", title: "Video One" },
   { id: 2, slug: "video-2", video: "02.mp4", thumb: "02.png", title: "Video Two" },
   { id: 3, slug: "video-3", video: "03.mp4", thumb: "03.png", title: "Video Three" },
