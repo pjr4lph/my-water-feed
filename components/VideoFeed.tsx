@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { Volume2, VolumeX } from "lucide-react"; 
 import { VIDEO_DATA } from "../lib/constants";
 import VideoPlayer from "../components/VideoPlayer";
 
@@ -10,6 +11,7 @@ const TRIPLE_DATA = [...VIDEO_DATA, ...VIDEO_DATA, ...VIDEO_DATA];
 
 export default function VideoFeed() {
   const [activeIndex, setActiveIndex] = useState(VIDEO_DATA.length); // Start at the middle set
+  const [isMuted, setIsMuted] = useState(true); // Global Mute State
   const containerRef = useRef<HTMLDivElement>(null);
 
 
@@ -56,31 +58,33 @@ export default function VideoFeed() {
   };
 
   return (
-    <main
-      ref={containerRef}
-      onScroll={handleScroll}
-      className="h-[100dvh] w-full overflow-y-scroll snap-y snap-mandatory bg-black scroll-smooth"
-    >
-      {TRIPLE_DATA.map((item, index) => {
-        // PROXIMITY LOGIC
-        const isActive = index === activeIndex;
-        const isNearby = Math.abs(index - activeIndex) === 1;
+    <main className="relative h-[100dvh] w-full bg-black overflow-hidden">
+      
+      {/* GLOBAL MUTE BUTTON */}
+      <button 
+        onClick={() => setIsMuted(!isMuted)}
+        className="absolute top-6 right-6 z-50 p-3 bg-black/40 backdrop-blur-md rounded-full border border-white/20 text-white active:scale-90 transition-transform"
+      >
+        {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+      </button>
 
-        return (
-          <div 
-            key={index} 
-            data-index={index} 
-            className="video-section h-[100dvh] w-full snap-start"
-          >
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        className="h-full w-full overflow-y-scroll snap-y snap-mandatory no-scrollbar"
+      >
+      {TRIPLE_DATA.map((item, index) => (
+          <div key={index} data-index={index} className="video-section h-[100dvh] w-full snap-start">
             <VideoPlayer
-              src={`${CLOUDFRONT_URL}/${item.video}`}
-              poster={`${CLOUDFRONT_URL}/${item.thumb}`}
-              isActive={isActive}
-              isNearby={isNearby}
+              src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_URL}/${item.video}`}
+              poster={`${process.env.NEXT_PUBLIC_CLOUDFRONT_URL}/${item.thumb}`}
+              isActive={index === activeIndex}
+              isNearby={Math.abs(index - activeIndex) === 1}
+              isMuted={isMuted} // Pass the global state down
             />
           </div>
-        );
-      })}
+        ))}
+      </div>
     </main>
   );
 }
