@@ -34,3 +34,39 @@ body {
   /* Prevents "bounce" on iOS which can mess up the teleportation logic */
   overscroll-behavior-y: none;
 }
+
+/* Mute icon fade */
+@layer utilities {
+  @keyframes fade-out-zoom {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    20% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    80% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  .animate-pop-fade {
+    animation: fade-out-zoom 0.8s forwards ease-out;
+  }
+}
+
+.video-section {
+  touch-action: manipulation;
+  /* Prevents double-tap to zoom */
+  -webkit-tap-highlight-color: transparent;
+  /* Removes the blue box when tapping on iOS */
+}

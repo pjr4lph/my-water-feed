@@ -17,6 +17,13 @@ export default function VideoPlayer({ src, poster, isActive, isNearby, isMuted, 
 
   // Play/Pause logic
   useEffect(() => {
+    // Only show the icon if the user actually interacts (not on first load)
+    setShowIcon(true);
+
+    const timer = setTimeout(() => {
+      setShowIcon(false);
+    }, 800);
+
     if (videoRef.current) {
       // Sync the internal muted state with the global prop
       videoRef.current.muted = isMuted;
@@ -33,6 +40,7 @@ export default function VideoPlayer({ src, poster, isActive, isNearby, isMuted, 
         videoRef.current.pause();
       }
     }
+    return () => clearTimeout(timer);
   }, [isActive, isMuted]);
 
   // Logic: Only "mount" the video tag if it is active or nearby.
@@ -69,7 +77,7 @@ export default function VideoPlayer({ src, poster, isActive, isNearby, isMuted, 
       >
         {/* Briefly show a speaker icon when they toggle */}
         {showIcon && (
-          <div className="p-4 rounded-full bg-black/50 text-white animate-out fade-out zoom-out duration-700">
+          <div className="p-5 rounded-full bg-black/40 backdrop-blur-sm text-white animate-pop-fade">
             {isMuted ? <VolumeX size={48} /> : <Volume2 size={48} />}
           </div>
         )}
