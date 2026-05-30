@@ -1,26 +1,47 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 
 interface VideoProps {
   src: string;
   poster: string;
   isActive: boolean; // Is currently being watched
   isNearby: boolean; // Is the next or previous video
+  isMuted: boolean;
+  toggleMute: () => void;
 }
 
-export default function VideoPlayer({ src, poster, isActive, isNearby }: VideoProps) {
+export default function VideoPlayer({ src, poster, isActive, isNearby, isMuted, toggleMute }: VideoProps) {
+  const [showIcon, setShowIcon] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Play/Pause logic
   useEffect(() => {
+    // Only show the icon if the user actually interacts (not on first load)
+    setShowIcon(true);
+
+    const timer = setTimeout(() => {
+      setShowIcon(false);
+    }, 800);
+
     if (videoRef.current) {
+      // Sync the internal muted state with the global prop
+      videoRef.current.muted = isMuted;
+
       if (isActive) {
-        videoRef.current.play().catch(() => {});
+        videoRef.current.play().catch(() => {
+          // Fallback: If autoplay fails because of audio, force mute it
+          if (!isMuted) {
+            videoRef.current!.muted = true;
+            videoRef.current!.play();
+          }
+        });
       } else {
         videoRef.current.pause();
       }
     }
-  }, [isActive]);
+    return () => clearTimeout(timer);
+  }, [isActive, isMuted]);
 
   // Logic: Only "mount" the video tag if it is active or nearby.
   // This limits the browser to only 3 active video decoders at a time.
@@ -49,10 +70,17 @@ export default function VideoPlayer({ src, poster, isActive, isNearby }: VideoPr
         />
       )}
 
-      {/* Optional Overlay UI */}
-      <div className="absolute bottom-12 left-6 text-white z-10">
-        <h2 className="font-bold text-lg">@ContentCreator</h2>
-        <p className="text-sm opacity-80">Check out this seamless loop! #NextJS #AWS</p>
+      // Inside VideoPlayer return:
+      <div 
+        onClick={() => toggleMute()} // You would pass the toggle function as a prop
+        className="absolute inset-0 z-20 flex items-center justify-center"
+      >
+        {/* Briefly show a speaker icon when they toggle */}
+        {showIcon && (
+          <div className="p-5 rounded-full bg-black/40 backdrop-blur-sm text-white animate-pop-fade">
+            {isMuted ? <VolumeX size={48} /> : <Volume2 size={48} />}
+          </div>
+        )}
       </div>
     </div>
   );
