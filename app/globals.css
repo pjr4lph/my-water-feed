@@ -70,3 +70,20 @@ body {
   -webkit-tap-highlight-color: transparent;
   /* Removes the blue box when tapping on iOS */
 }
+
+/* Arrow on first load */
+@keyframes bounce-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s infinite ease-in-out;
+}

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Volume2, VolumeX } from "lucide-react"; 
+import { Volume2, VolumeX, ChevronDown } from "lucide-react"; 
 import { VIDEO_DATA } from "../lib/constants";
 import VideoPlayer from "../components/VideoPlayer";
 
@@ -10,10 +10,12 @@ const CLOUDFRONT_URL = process.env.NEXT_PUBLIC_CLOUDFRONT_URL;
 const TRIPLE_DATA = [...VIDEO_DATA, ...VIDEO_DATA, ...VIDEO_DATA];
 
 export default function VideoFeed() {
+  const [hasScrolled, setHasScrolled] = useState(false); 
   const [activeIndex, setActiveIndex] = useState(VIDEO_DATA.length); // Start at the middle set
   const [isMuted, setIsMuted] = useState(true); // Global Mute State
   const containerRef = useRef<HTMLDivElement>(null);
-
+  
+  const toggleGlobalMute = () => setIsMuted((prev) => !prev);
 
     useEffect(() => {
     // 1. Initial jump to the middle of the triple list on load
@@ -43,6 +45,10 @@ export default function VideoFeed() {
   const handleScroll = () => {
     if (!containerRef.current) return;
 
+    if (!hasScrolled && containerRef.current.scrollTop > 50) {
+      setHasScrolled(true);
+    }
+
     const { scrollTop, offsetHeight } = containerRef.current;
     const singleSetHeight = offsetHeight * VIDEO_DATA.length;
 
@@ -60,6 +66,14 @@ export default function VideoFeed() {
   return (
     <main className="relative h-[100dvh] w-full bg-black overflow-hidden">
       
+      {/* SCROLL HINT ARROW */}
+      {!hasScrolled && (
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center text-white/70 pointer-events-none transition-opacity duration-500 animate-bounce-subtle">
+          <span className="text-xs uppercase tracking-widest mb-2 font-medium">Scroll</span>
+          <ChevronDown size={32} />
+        </div>
+      )}
+
       {/* GLOBAL MUTE BUTTON */}
       <button 
         onClick={() => setIsMuted(!isMuted)}
@@ -81,6 +95,7 @@ export default function VideoFeed() {
               isActive={index === activeIndex}
               isNearby={Math.abs(index - activeIndex) === 1}
               isMuted={isMuted} // Pass the global state down
+              toggleMute={toggleGlobalMute}
             />
           </div>
         ))}
