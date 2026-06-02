@@ -72,7 +72,7 @@ export default function VideoPlayer({ src, poster, isActive, isNearby, isMuted, 
 
       // Inside VideoPlayer return:
       <div 
-        onClick={() => toggleMute()} // You would pass the toggle function as a prop
+        onClick={toggleMute}
         className="absolute inset-0 z-20 flex items-center justify-center"
       >
         {/* Briefly show a speaker icon when they toggle */}
